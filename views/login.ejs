@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/scr'); -%>
+            <header>
+                <%- include('layouts/navbar', { user: user }); -%>
+            </header>
+            <main>
+                <div class="con">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Login Form</h5>
+                            <% if (typeof errorMessage !=='undefined' ) { %>
+                                <script>
+                                    alert('<%= errorMessage %>');
+                                </script>
+                                <% } %>
+                                    <form action="/login" method="POST">
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" class="form-control" id="username" name="email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                                        <div class="sign-up mt-4">
+                                            Don't have an account? <a href="/signup">Create One</a>
+                                        </div>
+                                    </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <%- include('layouts/footer'); -%>
+                <%- include('layouts/scripts'); -%>
+    </body>
+
+</html>

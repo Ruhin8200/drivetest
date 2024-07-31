@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/scr'); -%>
+            <header>
+                <%- include('layouts/navbar', { user: user }); -%>
+            </header>
+            <main>
+                <div class="container">
+                    <h1>Test Results</h1>
+                    <br>
+                    <h2 style="color: green;">Passed Candidates</h2>
+                    <% if (passedUsers.length> 0) { %>
+                        <ul class="list-group">
+                            <% passedUsers.forEach(user=> { %>
+                                <li class="list-group-item">
+                                    <p><strong>Name:</strong>
+                                        <%= user.firstName %>
+                                            <%= user.lastName %>
+                                    </p>
+                                    <p><strong>License Number:</strong>
+                                        <%= user.licenseNumber %>
+                                    </p>
+                                    <p><strong>Test Type:</strong>
+                                        <%= user.testType %>
+                                    </p>
+                                    <p><strong>Comment:</strong>
+                                        <%= user.comment %>
+                                    </p>
+                                </li>
+                                <% }); %>
+                        </ul>
+                        <% } else { %>
+                            <p>No candidates passed the test.</p>
+                            <% } %>
+                                <br>
+                                <h2 style="color: red;">Failed Candidates</h2>
+                                <% if (failedUsers.length> 0) { %>
+                                    <ul class="list-group">
+                                        <% failedUsers.forEach(user=> { %>
+                                            <li class="list-group-item">
+                                                <p><strong>Name:</strong>
+                                                    <%= user.firstName %>
+                                                        <%= user.lastName %>
+                                                </p>
+                                                <p><strong>License Number:</strong>
+                                                    <%= user.licenseNumber %>
+                                                </p>
+                                                <p><strong>Test Type:</strong>
+                                                    <%= user.testType %>
+                                                </p>
+                                                <p><strong>Comment:</strong>
+                                                    <%= user.comment %>
+                                                </p>
+                                            </li>
+                                            <% }); %>
+                                    </ul>
+                                    <% } else { %>
+                                        <p>No candidates failed the test.</p>
+                                        <% } %>
+                </div>
+            </main>
+            <%- include('layouts/footer'); -%>
+                <%- include('layouts/scripts'); -%>
+    </body>
+
+</html>

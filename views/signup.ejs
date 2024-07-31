@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/scr'); -%>
+            <header>
+                <%- include('layouts/navbar', { user: user }); -%>
+            </header>
+            <main>
+                <div class="con">
+                    <div class="card signup-form">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Sign Up Form</h5>
+                            <form action="/signup" method="POST" onsubmit="return validateSignupForm()">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" minlength="8"
+                                        required>
+                                    <div class="invalid-feedback">Username must be at least 8 characters long.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password"
+                                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                                    <small class="form-text text-muted">
+                                        Password must be at least 8 characters long, contain at least one number, one
+                                        lowercase and one uppercase letter.
+                                    </small>
+                                    <div class="invalid-feedback">Password must meet the requirements.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="repeatPassword" class="form-label">Repeat Password</label>
+                                    <input type="password" class="form-control" id="repeatPassword"
+                                        name="repeatPassword" required>
+                                    <div class="invalid-feedback">Passwords do not match.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="userType" class="form-label">User Type</label>
+                                    <select class="form-select" id="userType" name="userType">
+                                        <option value="Driver">Driver</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Examiner">Examiner</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                                <div class="sign-up mt-4">
+                                    Already have an account? <a href="/login">Login</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <%- include('layouts/footer'); -%>
+                <%- include('layouts/scripts'); -%>
+                    <script>
+                        function validateSignupForm() {
+                            const username = document.getElementById('username');
+                            const password = document.getElementById('password');
+                            const repeatPassword = document.getElementById('repeatPassword');
+
+                            if (username.value.length < 8) {
+                                username.classList.add('is-invalid');
+                                return false;
+                            } else {
+                                username.classList.remove('is-invalid');
+                            }
+
+                            if (!password.value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)) {
+                                password.classList.add('is-invalid');
+                                return false;
+                            } else {
+                                password.classList.remove('is-invalid');
+                            }
+
+                            if (password.value !== repeatPassword.value) {
+                                repeatPassword.classList.add('is-invalid');
+                                return false;
+                            } else {
+                                repeatPassword.classList.remove('is-invalid');
+                            }
+
+                            return true;
+                        }
+                    </script>
+    </body>
+
+</html>

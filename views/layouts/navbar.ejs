@@ -1,0 +1,21 @@
+<nav class="navbar">
+    <h1 class="logo1"><span>Book</span>DriveTest</h1>
+    <ul class="nav-links">
+        <% if (!user) { %>
+            <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
+            <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li>
+            <% } else { %>
+                <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
+                <% if (user.userType==='Driver' ) { %>
+                    <li class="nav-item"><a class="nav-link" href="/g2">G2_TEST</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/g">G_TEST</a></li>
+                    <% } else if (user.userType==='Admin' ) { %>
+                        <li class="nav-item"><a class="nav-link" href="/appointment">APPOINTMENTS</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/results">RESULTS</a></li>
+                        <% } else if (user.userType==='Examiner' ) { %>
+                            <li class="nav-item"><a class="nav-link" href="/examiner">EXAMINER</a></li>
+                            <% } %>
+                                <li class="nav-item"><a class="nav-link" href="/logout">LOGOUT</a></li>
+                                <% } %>
+    </ul>
+</nav>

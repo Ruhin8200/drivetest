@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/scr'); -%>
+            <header>
+                <%- include('layouts/navbar', { user: user }); -%>
+            </header>
+            <main>
+                <div class="container">
+                    <h1>Book Your Appointment</h1>
+                    <hr>
+                    <% if (user.appointment && user.testType==='G2' ) { %>
+                        <h2>Your Scheduled Appointment</h2>
+                        <p><strong>Date:</strong>
+                            <%= user.appointment.date %>
+                        </p>
+                        <p><strong>Time:</strong>
+                            <%= user.appointment.time %>
+                        </p>
+                        <form action="/cancelAppointment" method="post">
+                            <input type="hidden" name="testType" value="G2">
+                            <button type="submit" class="btn btn-danger">Cancel Appointment</button>
+                        </form>
+                        <hr>
+                        <h2>Reschedule Appointment</h2>
+                        <% } %>
+                            <form action="/g2" method="get">
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Select Date</label>
+                                    <input type="date" class="form-control" id="date" name="date" value="<%= date %>"
+                                        required>
+                                </div>
+                                <input type="hidden" name="testType" value="G2">
+                                <button type="submit" class="btn btn-primary">Show Available Slots</button>
+                            </form>
+                            <% if (availableSlots.length> 0) { %>
+                                <h2>Available Slots on <%= date %>
+                                </h2>
+                                <form action="/bookAppointment" method="post">
+                                    <input type="hidden" name="date" value="<%= date %>">
+                                    <input type="hidden" name="testType" value="G2">
+                                    <div class="mb-3">
+                                        <% availableSlots.forEach(slot=> { %>
+                                            <label>
+                                                <input type="radio" name="time" value="<%= slot.time %>" required>
+                                                <%= slot.time %>
+                                            </label>
+                                            <% }); %>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Book Appointment</button>
+                                </form>
+                                <% } else if (user.appointment && user.testType==='G2' ) { %>
+                                    <p>Select a date to reschedule your appointment.</p>
+                                    <% } else { %>
+                                        <p>No available slots for the selected date.</p>
+                                        <% } %>
+                </div>
+                <div class="container">
+                    <% if (typeof user !=='undefined' && user && user.carDetails && user.carDetails.make==='default' ) {
+                        %>
+                        <div role="alert">
+                            Please enter your information:
+                            <form id="userForm" action="/submit" method="post">
+                                <div class="section" id="personalInformation">
+                                    <h2>Personal Information</h2>
+                                    <div class="form-group">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" id="firstName" name="firstName" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" id="lastName" name="lastName" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="licenseNumber">License Number</label>
+                                        <input type="text" id="licenseNumber" name="licenseNumber" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age">Age</label>
+                                        <input type="number" id="age" name="age" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="section" id="carInformation">
+                                    <h2>Car Information</h2>
+                                    <div class="form-group">
+                                        <label for="make">Make</label>
+                                        <input type="text" id="make" name="make" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="model">Model</label>
+                                        <input type="text" id="model" name="model" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="year">Year</label>
+                                        <input type="number" id="year" name="year" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="plateNumber">Plate Number</label>
+                                        <input type="text" id="plateNumber" name="plateNumber" class="form-control">
+                                    </div>
+                                </div>
+                                <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                        <% } else { %>
+                            <div class="al" role="alert">
+                                <h2>Your Information :</h2>
+                                <ul>
+                                    <li><strong>First Name:</strong>
+                                        <%= user.firstName %>
+                                    </li>
+                                    <li><strong>Last Name:</strong>
+                                        <%= user.lastName %>
+                                    </li>
+                                    <li><strong>License Number:</strong>
+                                        <%= user.licenseNumber %>
+                                    </li>
+                                    <li><strong>Age:</strong>
+                                        <%= user.age %>
+                                    </li>
+                                    <li><strong>Car Make:</strong>
+                                        <%= user.carDetails.make %>
+                                    </li>
+                                    <li><strong>Car Model:</strong>
+                                        <%= user.carDetails.model %>
+                                    </li>
+                                    <li><strong>Car Year:</strong>
+                                        <%= user.carDetails.year %>
+                                    </li>
+                                    <li><strong>Plate Number:</strong>
+                                        <%= user.carDetails.plateNumber %>
+                                    </li>
+                                </ul>
+                            </div>
+                            <% } %>
+                </div>
+            </main>
+            <%- include('layouts/footer'); -%>
+                <%- include('layouts/scripts'); -%>
+    </body>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/scr'); -%>
+            <header>
+                <%- include('layouts/navbar', { user: user }); -%>
+            </header>
+            <main>
+                <div class="container">
+                    <h1>Appointment Management</h1>
+                    <% if (typeof errorMessage !=='undefined' ) { %>
+                        <div class="alert alert-danger">
+                            <%= errorMessage %>
+                        </div>
+                        <% } %>
+                            <form id="appointmentForm" action="/appointment" method="POST">
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="date" name="date" value="<%= date %>"
+                                        required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="testType" class="form-label">Test Type</label>
+                                    <select class="form-select" id="testType" name="testType" required>
+                                        <option value="G" <%=testType==='G' ? 'selected' : '' %>>G</option>
+                                        <option value="G2" <%=testType==='G2' ? 'selected' : '' %>>G2</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="timeSlots" class="form-label">Select Time Slots</label>
+                                    <div id="timeSlots">
+                                        <% const timeSlots=["9:00 AM", "9:30 AM" , "10:00 AM" , "10:30 AM" , "11:00 AM"
+                                            , "11:30 AM" , "12:00 PM" , "12:30 PM" , "1:00 PM" , "1:30 PM" , "2:00 PM"
+                                            ]; %>
+                                            <% timeSlots.forEach(slot=> { %>
+                                                <% const isAvailable=!appointments.some(appointment=> appointment.date
+                                                    === date && appointment.time === slot && appointment.testType ===
+                                                    testType); %>
+                                                    <% if (isAvailable) { %>
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="timeSlots" value="<%= slot %>">
+                                                            <label class="form-check-label">
+                                                                <%= slot %>
+                                                            </label>
+                                                        </div>
+                                                        <% } %>
+                                                            <% }); %>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create Appointment Slots</button>
+                            </form>
+                </div>
+            </main>
+            <%- include('layouts/footer'); -%>
+                <%- include('layouts/scripts'); -%>
+                    <script>
+                        document.getElementById('date').addEventListener('change', function () {
+                            const date = this.value;
+                            const testType = document.getElementById('testType').value;
+                            fetch(`/availableSlots?date=${date}&testType=${testType}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const timeSlotsDiv = document.getElementById('timeSlots');
+                                    timeSlotsDiv.innerHTML = '';
+                                    const timeSlots = ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM"];
+                                    timeSlots.forEach(slot => {
+                                        const isAvailable = !data.availableSlots.some(appointment => appointment.time === slot);
+                                        if (isAvailable) {
+                                            const div = document.createElement('div');
+                                            div.classList.add('form-check', 'mb-2');
+                                            div.innerHTML = `<input class="form-check-input" type="checkbox" name="timeSlots" value="${slot}"> <label class="form-check-label">${slot}</label>`;
+                                            timeSlotsDiv.appendChild(div);
+                                        }
+                                    });
+                                })
+                                .catch(error => console.error('Error fetching available slots:', error));
+                        });
+
+                        document.getElementById('testType').addEventListener('change', function () {
+                            const date = document.getElementById('date').value;
+                            const testType = this.value;
+                            fetch(`/availableSlots?date=${date}&testType=${testType}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const timeSlotsDiv = document.getElementById('timeSlots');
+                                    timeSlotsDiv.innerHTML = '';
+                                    const timeSlots = ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM"];
+                                    timeSlots.forEach(slot => {
+                                        const isAvailable = !data.availableSlots.some(appointment => appointment.time === slot);
+                                        if (isAvailable) {
+                                            const div = document.createElement('div');
+                                            div.classList.add('form-check', 'mb-2');
+                                            div.innerHTML = `<input class="form-check-input" type="checkbox" name="timeSlots" value="${slot}"> <label class="form-check-label">${slot}</label>`;
+                                            timeSlotsDiv.appendChild(div);
+                                        }
+                                    });
+                                })
+                                .catch(error => console.error('Error fetching available slots:', error));
+                        });
+                    </script>
+    </body>
+
+</html>

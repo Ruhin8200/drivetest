@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/scr'); -%>
+            <header>
+                <%- include('layouts/navbar', { user: user }); -%>
+            </header>
+            <main>
+                <div class="container">
+                    <h1>Examiner Dashboard</h1>
+                    <form method="get" action="/examiner">
+                        <div class="mb-3">
+                            <label for="testType" class="form-label">Filter by Test Type</label>
+                            <select class="form-select" id="testType" name="testType">
+                                <option value="">All</option>
+                                <option value="G">G</option>
+                                <option value="G2">G2</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </form>
+                    <h2>Appointments</h2>
+                    <% if (appointments.length> 0) { %>
+                        <ul class="list-group">
+                            <% appointments.forEach(appointment=> { %>
+                                <% if (appointment.user) { %>
+                                    <li class="list-group-item">
+                                        <p><strong>Driver:</strong>
+                                            <%= appointment.user.firstName %>
+                                                <%= appointment.user.lastName %>
+                                        </p>
+                                        <p><strong>Car:</strong>
+                                            <%= appointment.user.carDetails.make %>
+                                                <%= appointment.user.carDetails.model %> (<%=
+                                                        appointment.user.carDetails.year %>)
+                                        </p>
+                                        <p><strong>Date:</strong>
+                                            <%= appointment.date %>
+                                        </p>
+                                        <p><strong>Time:</strong>
+                                            <%= appointment.time %>
+                                        </p>
+                                        <form method="post" action="/examiner/complete">
+                                            <input type="hidden" name="appointmentId" value="<%= appointment._id %>">
+                                            <div class="mb-3">
+                                                <label for="comment" class="form-label">Comment</label>
+                                                <textarea class="form-control" id="comment" name="comment"></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="pass" class="form-label">Pass</label>
+                                                <select class="form-select" id="pass" name="pass">
+                                                    <option value="true">Pass</option>
+                                                    <option value="false">Fail</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-success">Complete Test</button>
+                                        </form>
+
+                                    </li>
+                                    <br>
+                                    <% } %>
+                                        <% }); %>
+                        </ul>
+                        <% } else { %>
+                            <p>No appointments available.</p>
+                            <% } %>
+                </div>
+            </main>
+            <%- include('layouts/footer'); -%>
+                <%- include('layouts/scripts'); -%>
+    </body>
+
+</html>

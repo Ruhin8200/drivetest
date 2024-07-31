@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+
+    <body>
+        <%- include('layouts/scr'); -%>
+            <header>
+                <%- include('layouts/navbar', { user: user }); -%>
+            </header>
+            <main>
+                <div class="container">
+                    <h1>Book Your Appointment</h1>
+                    <hr>
+                    <% if (user.appointment && user.testType==='G' ) { %>
+                        <h2>Your Scheduled Appointment</h2>
+                        <p><strong>Date:</strong>
+                            <%= user.appointment.date %>
+                        </p>
+                        <p><strong>Time:</strong>
+                            <%= user.appointment.time %>
+                        </p>
+                        <form action="/cancelAppointment" method="post">
+                            <input type="hidden" name="testType" value="G">
+                            <button type="submit" class="btn btn-danger">Cancel Appointment</button>
+                        </form>
+                        <hr>
+                        <h2>Reschedule Appointment</h2>
+                        <% } %>
+                            <form action="/g" method="get">
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Select Date</label>
+                                    <input type="date" class="form-control" id="date" name="date" value="<%= date %>"
+                                        required>
+                                </div>
+                                <input type="hidden" name="testType" value="G">
+                                <button type="submit" class="btn btn-primary">Show Available Slots</button>
+                            </form>
+                            <% if (availableSlots.length> 0) { %>
+                                <h2>Available Slots on <%= date %>
+                                </h2>
+                                <form action="/bookAppointment" method="post">
+                                    <input type="hidden" name="date" value="<%= date %>">
+                                    <input type="hidden" name="testType" value="G">
+                                    <div class="mb-3">
+                                        <% availableSlots.forEach(slot=> { %>
+                                            <label>
+                                                <input type="radio" name="time" value="<%= slot.time %>" required>
+                                                <%= slot.time %>
+                                            </label>
+                                            <% }); %>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Book Appointment</button>
+                                </form>
+                                <% } else if (user.appointment && user.testType==='G' ) { %>
+                                    <p>Select a date to reschedule your appointment.</p>
+                                    <% } else { %>
+                                        <p>No available slots for the selected date.</p>
+                                        <% } %>
+                </div>
+                <div class="container">
+                    <h1>G Page</h1>
+                    <% if (typeof user !=='undefined' && user) { %>
+                        <% if (user.firstName==='default' || user.lastName==='default' ) { %>
+                            <div class="alert alert-danger" role="alert">
+                                No user data available.
+                            </div>
+                            <% } else { %>
+                                <div id="userInfo">
+                                    <h2>Your Information :</h2>
+                                    <div class="form-group">
+                                        <label>First Name</label>
+                                        <input type="text" value="<%= user.firstName %>" class="dark form-control"
+                                            readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Last Name</label>
+                                        <input type="text" value="<%= user.lastName %>" class="dark form-control"
+                                            readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>License Number</label>
+                                        <input type="text" value="<%= user.licenseNumber %>" class="dark form-control"
+                                            readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Age</label>
+                                        <input type="text" value="<%= user.age %>" class="dark form-control" readonly>
+                                    </div>
+                                </div>
+                                <form id="updateForm" action="/updateUser" method="post">
+                                    <input type="hidden" name="licenseNumber" value="<%= user.licenseNumber %>">
+                                    <h2>Car Information</h2>
+                                    <div class="form-group">
+                                        <label for="make">Make</label>
+                                        <input type="text" id="make" name="make" value="<%= user.carDetails.make %>"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="model">Model</label>
+                                        <input type="text" id="model" name="model" value="<%= user.carDetails.model %>"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="year">Year</label>
+                                        <input type="number" id="year" name="year" value="<%= user.carDetails.year %>"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="plateNumber">Plate Number</label>
+                                        <input type="text" id="plateNumber" name="plateNumber"
+                                            value="<%= user.carDetails.plateNumber %>" class="form-control">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Car Information</button>
+                                </form>
+                                <% } %>
+                                    <% } else { %>
+                                        <div class="alert alert-danger" role="alert">
+                                            No user data available.
+                                        </div>
+                                        <% } %>
+                </div>
+            </main>
+            <%- include('layouts/footer'); -%>
+                <%- include('layouts/scripts'); -%>
+    </body>
+
+</html>
