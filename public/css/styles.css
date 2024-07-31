@@ -119,6 +119,7 @@ section div p a {
   li {
     margin: 0 1rem;
     font-size: 16px;
+    text-align: center;
   }
 }
 
