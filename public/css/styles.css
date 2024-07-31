@@ -114,7 +114,7 @@ section div p a {
     flex-direction: column;
   }
   .nav-links {
-    padding-top: 30px;
+    padding-top: 10px;
   }
   li {
     margin: 0 1rem;
@@ -122,6 +122,20 @@ section div p a {
   }
 }
 
+@media (max-width: 540px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .nav-links .nav-item {
+    display: block;
+  }
+}
 .containerl {
   margin-top: 150px;
 }
